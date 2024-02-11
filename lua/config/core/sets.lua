@@ -20,4 +20,7 @@ vim.opt.termguicolors = true
 vim.opt.scrolloff = 10
 
 vim.opt.signcolumn = "yes"
+
+vim.opt.conceallevel = 1
+
 --vim.o.shell = "pwsh.exe --nologo"

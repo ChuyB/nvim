@@ -13,11 +13,9 @@ return {
         width = 100,
         height = 25
       },
-      shell = "pwsh.exe --nologo"
     })
 
     vim.keymap.set({ "n", "t" }, "<C-n><C-f>", "<cmd>ToggleTerm direction=float<cr>")
     vim.keymap.set({ "n", "t" }, "<C-n><C-s>", "<cmd>ToggleTerm direction=vertical<cr>")
   end
 }
-
