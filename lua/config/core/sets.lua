@@ -23,4 +23,4 @@ vim.opt.signcolumn = "yes"
 
 vim.opt.conceallevel = 1
 
---vim.o.shell = "pwsh.exe --nologo"
+--vim.o.shell = "pwsh.exe -nologo"
