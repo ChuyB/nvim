@@ -14,9 +14,9 @@ return {
         -- can be either an absolute font size or the number of incremental steps
         font = "+0.3", -- (10% increase per step)
       },
-      tmux = {
-        enabled = true
-      },
+      -- tmux = {
+      --   enabled = true
+      -- },
       twilight = { enabled = false }
     }
   }

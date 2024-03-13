@@ -5,6 +5,7 @@ return {
     local pairs = require("mini.pairs")
     local surround = require("mini.surround")
     local hipatterns = require("mini.hipatterns")
+    local starter = require("mini.starter")
 
     pairs.setup()
     surround.setup()
@@ -31,6 +32,31 @@ return {
 
         -- Highlight hex color strings (`#rrggbb`) using that color
         hex_color = hipatterns.gen_highlighter.hex_color(),
+      },
+    })
+    starter.setup({
+      content_hooks = {
+        starter.gen_hook.adding_bullet(""),
+        starter.gen_hook.aligning("center", "center"),
+      },
+      evaluate_single = true,
+      footer = os.date(),
+      header = table.concat({
+        [[                                                                       ]],
+        [[  ██████   █████                   █████   █████  ███                  ]],
+        [[ ░░██████ ░░███                   ░░███   ░░███  ░░░                   ]],
+        [[  ░███░███ ░███   ██████   ██████  ░███    ░███  ████  █████████████   ]],
+        [[  ░███░░███░███  ███░░███ ███░░███ ░███    ░███ ░░███ ░░███░░███░░███  ]],
+        [[  ░███ ░░██████ ░███████ ░███ ░███ ░░███   ███   ░███  ░███ ░███ ░███  ]],
+        [[  ░███  ░░█████ ░███░░░  ░███ ░███  ░░░█████░    ░███  ░███ ░███ ░███  ]],
+        [[  █████  ░░█████░░██████ ░░██████     ░░███      █████ █████░███ █████ ]],
+        [[ ░░░░░    ░░░░░  ░░░░░░   ░░░░░░       ░░░      ░░░░░ ░░░░░ ░░░ ░░░░░  ]],
+        [[                                                                       ]],
+      }, "\n"),
+      query_updaters = [[abcdefghilmoqrstuvwxyz0123456789_-,.ABCDEFGHIJKLMOQRSTUVWXYZ]],
+      items = {
+        { action = "enew",  name = "E: New Buffer",  section = "Builtin actions" },
+        { action = "qall!", name = "Q: Quit Neovim", section = "Builtin actions" },
       },
     })
   end,
