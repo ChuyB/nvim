@@ -16,12 +16,13 @@ return {
 				"lua",
 				"javascript",
 				"typescript",
-				"tsx",
+        "tsx",
 				"css",
 				"html",
 				"markdown",
 				"markdown_inline",
-				"java",
+        "python",
+        "vimdoc"
 			},
 			incremental_selection = {
 				enable = true,

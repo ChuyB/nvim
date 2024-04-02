@@ -21,5 +21,5 @@ opts = {
     notify = false
   }
 }
-
 require("lazy").setup(plugins, opts)
+
