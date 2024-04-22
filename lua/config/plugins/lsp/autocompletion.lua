@@ -44,6 +44,7 @@ return {
 		event = { "BufReadPre", "BufNewFile" },
 		dependencies = {
 			"hrsh7th/cmp-path", -- For file system paths
+			"hrsh7th/cmp-nvim-lua", -- For Nvim Lua API
 		},
 		config = function()
 			local cmp = require("cmp")
@@ -95,6 +96,7 @@ return {
 					},
 					{ name = "path" },
 					{ name = "luasnip" },
+					{ name = "nvim_lua" },
 				}, {
 					{ name = "buffer" },
 				}),

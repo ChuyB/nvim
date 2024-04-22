@@ -74,14 +74,19 @@ return {
 					cursorline = true,
 				},
 				render = function(props)
-					local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ":t")
-					if filename == "" then
-						filename = "[No Name]"
+					local function get_git_branch()
+						local labels = {}
+						local branch = vim.b[props.buf].gitsigns_head
+						if branch ~= nil then
+							table.insert(labels, { " ", guifg = "#61AfEf" })
+							table.insert(labels, { branch, group = "Keyword" })
+              table.insert(labels, { " | " })
+						end
+						return labels
 					end
-					local ft_icon, ft_color = devicons.get_icon_color(filename)
 
 					local function get_git_diff()
-						local icons = { removed = " ", changed = " ", added = " " }
+						local icons = { removed = "-", changed = "~", added = "+" }
 						local signs = vim.b[props.buf].gitsigns_status_dict
 						local labels = {}
 						if signs == nil then
@@ -139,6 +144,12 @@ return {
 					end
 
 					local function get_file_name()
+						local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ":t")
+						if filename == "" then
+							filename = "[No Name]"
+						end
+						local ft_icon, ft_color = devicons.get_icon_color(filename)
+
 						local label = {}
 						table.insert(label, { (ft_icon or "") .. " ", guifg = ft_color, guibg = "none" })
 						table.insert(label, { vim.bo[props.buf].modified and " " or "", guifg = "#d19a66" })
@@ -153,6 +164,7 @@ return {
 					return {
 						{ "", guifg = "#0e0e0e" },
 						{
+							{ get_git_branch() },
 							{ get_diagnostic_label() },
 							{ get_git_diff() },
 							{ get_harpoon_items() },

@@ -14,8 +14,8 @@ vim.opt.rtp:prepend(lazypath)
 plugins = {{import = "config.plugins"}, {import = "config.plugins.lsp"}}
 opts = {
   checker = {
-    enabled = true,
-    notify = false
+    enabled = false,
+    -- notify = false
   },
   change_detection = {
     notify = false
