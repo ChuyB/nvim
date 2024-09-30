@@ -24,7 +24,7 @@ vim.opt.laststatus = 0
 vim.api.nvim_set_hl(0, "Statusline", { link = "Normal" })
 vim.api.nvim_set_hl(0, "StatuslineNC", { link = "Normal" })
 local str = string.rep("-", vim.api.nvim_win_get_width(0))
-vim.opt.statusline = '%#WinSeparator#'..str..'%*'
+vim.opt.statusline = "%#WinSeparator#" .. str .. "%*"
 
 -- Reduces time for mapings
 -- vim.opt.updatetime = 250

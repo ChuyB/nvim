@@ -9,20 +9,27 @@ return {
 		treesitterI.compilers = { "clang" }
 
 		treesitter.setup({
-			highlight = { enable = true },
-			indent = { enable = true },
-			--auto_install = true,
+			highlight = { enable = true, disable = { "lua" } },
+			indent = { enable = true, disable = { "lua" } },
+			auto_install = true,
 			ensure_installed = {
 				"lua",
+				"luadoc",
+				"luap",
+				"luau",
+				"java",
 				"javascript",
 				"typescript",
-        "tsx",
+				"tsx",
 				"css",
 				"html",
 				"markdown",
 				"markdown_inline",
-        "python",
-        "vimdoc"
+				"python",
+				"vimdoc",
+				"vim",
+				"c",
+				"cmake",
 			},
 			incremental_selection = {
 				enable = true,

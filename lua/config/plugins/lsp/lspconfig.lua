@@ -3,6 +3,9 @@ local lsp_list = {
 	"tsserver",
 	"emmet_language_server",
 	"tailwindcss",
+	"jdtls",
+	"pylsp",
+	"clangd",
 }
 
 return {
@@ -31,6 +34,37 @@ return {
 			lspconfig.tailwindcss.setup({
 				capabilities = capabilities,
 				handlers = handlers,
+			})
+			lspconfig.clangd.setup({
+				capabilities = capabilities,
+				handlers = handlers,
+			})
+			lspconfig.pylsp.setup({
+				capabilities = capabilities,
+				handlers = handlers,
+				settings = {
+					configurationSources = { "flake8" },
+					pylsp = {
+						plugins = {
+							pyflakes = { enabled = true },
+							pycodestyle = {
+								enable = false,
+								ignore = { "E501", "E231", "E261", "E302", "E251", "E722", "E202", "W293", "W291" },
+							},
+						},
+					},
+				},
+			})
+			lspconfig.jdtls.setup({
+				capabilities = capabilities,
+				handlers = {
+					["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = "rounded" }),
+					["textDocument/signatureHelp"] = vim.lsp.with(
+						vim.lsp.handlers.signature_help,
+						{ border = "rounded" }
+					),
+					["$/progress"] = function(_, result, ctx) end,
+				},
 			})
 			lspconfig.lua_ls.setup({
 				handlers = handlers,
