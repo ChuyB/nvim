@@ -1,5 +1,5 @@
 return {
-  dir = "~/code/billboard.nvim",
+  dir = "~/Code/billboard.nvim",
   opts = {
     render = {
       {
