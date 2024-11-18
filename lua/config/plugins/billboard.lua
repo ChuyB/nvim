@@ -13,7 +13,7 @@ return {
         },
 
         highlight = {
-          guifg = "#34EDF3",
+          guifg = "#FFFFFF",
         },
       },
 

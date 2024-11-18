@@ -1,18 +1,19 @@
 return {
-  {
-    "github/copilot.vim",
-		event = { "BufReadPre", "BufNewFile" },
-  },
 	{
-		"windwp/nvim-autopairs",
-		event = "InsertEnter",
-		config = true,
+		"github/copilot.vim",
+		event = { "BufReadPre", "BufNewFile" },
 	},
 	{
-		"https://github.com/echasnovski/mini.nvim",
+		"lewis6991/gitsigns.nvim",
+		event = { "BufNewFile", "BufReadPre" },
+		opts = {},
+	},
+	{
+		"echasnovski/mini.nvim",
 		event = { "BufReadPre", "BufNewFile" },
 		config = function()
 			local cursorword = require("mini.cursorword")
+			local pairs = require("mini.pairs")
 			local comments = require("mini.comment")
 			local hipatterns = require("mini.hipatterns")
 			local indentscope = require("mini.indentscope")
@@ -20,6 +21,7 @@ return {
 
 			surround.setup()
 			cursorword.setup()
+			pairs.setup()
 			comments.setup({
 				mappings = {
 					-- Toggle comment (like `gcip` - comment inner paragraph) for both
@@ -57,17 +59,5 @@ return {
 			vim.api.nvim_set_hl(0, "MiniCursorwordCurrent", { link = "Visual" })
 			vim.api.nvim_set_hl(0, "MiniIndentscopeSymbol", { fg = "#3b4048" })
 		end,
-	},
-	{
-		"folke/zen-mode.nvim",
-		event = { "BufReadPre", "BufNewFile" },
-		opts = {
-			plugins = {
-				wezterm = {
-					enabled = true,
-					font = "+4",
-				},
-			},
-		},
 	},
 }

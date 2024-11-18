@@ -1,11 +1,12 @@
 local lsp_list = {
 	"lua_ls",
-	"tsserver",
+	"ts_ls",
 	"emmet_language_server",
 	"tailwindcss",
 	"jdtls",
 	"pylsp",
 	"clangd",
+	"cssls",
 }
 
 return {
@@ -23,7 +24,7 @@ return {
 			}
 
 			-- SERVERS --
-			lspconfig.tsserver.setup({
+			lspconfig.ts_ls.setup({
 				handlers = handlers,
 				capabilities = capabilities,
 			})
@@ -36,6 +37,10 @@ return {
 				handlers = handlers,
 			})
 			lspconfig.clangd.setup({
+				capabilities = capabilities,
+				handlers = handlers,
+			})
+			lspconfig.cssls.setup({
 				capabilities = capabilities,
 				handlers = handlers,
 			})
@@ -116,7 +121,11 @@ return {
 	},
 	{
 		"williamboman/mason.nvim",
-		config = true,
+		opts = {
+			ui = {
+				border = "rounded",
+			},
+		},
 	},
 	{
 		"williamboman/mason-lspconfig.nvim",
