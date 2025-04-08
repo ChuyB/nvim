@@ -7,6 +7,7 @@ local lsp_list = {
 	"pylsp",
 	"clangd",
 	"cssls",
+  "gopls"
 }
 
 return {
@@ -44,6 +45,10 @@ return {
 				capabilities = capabilities,
 				handlers = handlers,
 			})
+      lspconfig.gopls.setup({
+        capabilities = capabilities,
+        handlers = handlers,
+      })
 			lspconfig.pylsp.setup({
 				capabilities = capabilities,
 				handlers = handlers,

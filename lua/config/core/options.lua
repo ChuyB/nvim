@@ -34,14 +34,14 @@ vim.opt.statusline = "%#WinSeparator#" .. str .. "%*"
 vim.opt.inccommand = "split"
 
 -- Wayland: Set copy to clipboard
-vim.o.clipboard = "unnamed"
-vim.g.clipboard = {
-  copy = {
-    ["+"] = {"wl-copy"},
-    ["*"] = {"wl-copy"}
-  },
-  paste = {
-    ["+"] = {"wl-paste"},
-    ["*"] = {"wl-paste"}
-  }
-}
+-- vim.o.clipboard = "unnamed"
+-- vim.g.clipboard = {
+--   copy = {
+--     ["+"] = {"wl-copy"},
+--     ["*"] = {"wl-copy"}
+--   },
+--   paste = {
+--     ["+"] = {"wl-paste"},
+--     ["*"] = {"wl-paste"}
+--   }
+-- }
