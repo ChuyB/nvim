@@ -49,10 +49,6 @@ return {
         capabilities = capabilities,
         handlers = handlers,
       })
-      lspconfig.dartls.setup({
-        capabilities = capabilities,
-        handlers = handlers,
-      })
       lspconfig.pylsp.setup({
         capabilities = capabilities,
         handlers = handlers,
