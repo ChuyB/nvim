@@ -17,6 +17,7 @@ vim.opt.scrolloff = 10
 vim.opt.splitbelow = true
 vim.opt.splitright = true
 vim.opt.signcolumn = "yes"
+-- vim.opt.winborder = "rounded"
 
 -- No status lines
 vim.opt.laststatus = 0
@@ -33,15 +34,11 @@ vim.opt.statusline = "%#WinSeparator#" .. str .. "%*"
 -- Preview substitutions live
 vim.opt.inccommand = "split"
 
--- Wayland: Set copy to clipboard
--- vim.o.clipboard = "unnamed"
--- vim.g.clipboard = {
---   copy = {
---     ["+"] = {"wl-copy"},
---     ["*"] = {"wl-copy"}
---   },
---   paste = {
---     ["+"] = {"wl-paste"},
---     ["*"] = {"wl-paste"}
---   }
--- }
+-- Highlight when yanking
+vim.api.nvim_create_autocmd("TextYankPost", {
+	desc = "Highlight when yanking (copying) text",
+	group = vim.api.nvim_create_augroup("kickstart-highlight-yank", { clear = true }),
+	callback = function()
+		vim.highlight.on_yank()
+	end,
+})

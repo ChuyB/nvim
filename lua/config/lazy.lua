@@ -11,7 +11,7 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
-plugins = {{import = "config.plugins"}, {import = "config.plugins.lsp"}}
+plugins = { { import = "config.plugins" } }
 opts = {
   checker = {
     enabled = false,
@@ -22,4 +22,3 @@ opts = {
   }
 }
 require("lazy").setup(plugins, opts)
-

@@ -1,3 +1,3 @@
-require("config.core.autos")
 require("config.core.options")
 require("config.core.remaps")
+require("config.core.lsp")

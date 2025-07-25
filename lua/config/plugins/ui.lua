@@ -1,7 +1,52 @@
 return {
 	{
-		"stevearc/dressing.nvim",
-		opts = {},
+		"echasnovski/mini.nvim",
+		event = { "BufReadPre", "BufNewFile" },
+		config = function()
+			local cursorword = require("mini.cursorword")
+			local pairs = require("mini.pairs")
+			local comments = require("mini.comment")
+			local hipatterns = require("mini.hipatterns")
+			local surround = require("mini.surround")
+			local indent = require("mini.indentscope")
+
+			surround.setup()
+			cursorword.setup()
+			pairs.setup()
+			indent.setup({
+				symbol = "│",
+			})
+			comments.setup({
+				mappings = {
+					-- Toggle comment (like `gcip` - comment inner paragraph) for both
+					-- Normal and Visual modes
+					comment = "gc",
+					-- Toggle comment on current line
+					comment_line = "gcc",
+					-- Toggle comment on visual selection
+					comment_visual = "gc",
+					-- Define 'comment' textobject (like `dgc` - delete whole comment block)
+					textobject = "gc",
+				},
+			})
+			hipatterns.setup({
+				highlighters = {
+					-- Highlight standalone 'FIXME', 'HACK', 'TODO', 'NOTE'
+					fixme = { pattern = "%f[%w]()FIXME()%f[%W]", group = "MiniHipatternsFixme" },
+					hack = { pattern = "%f[%w]()HACK()%f[%W]", group = "MiniHipatternsHack" },
+					todo = { pattern = "%f[%w]()TODO()%f[%W]", group = "MiniHipatternsTodo" },
+					note = { pattern = "%f[%w]()NOTE()%f[%W]", group = "MiniHipatternsNote" },
+
+					-- Highlight hex color strings (`#rrggbb`) using that color
+					hex_color = hipatterns.gen_highlighter.hex_color(),
+				},
+			})
+
+			-- NOTE: Changes cursorword and indentscope colors and visuals
+			vim.api.nvim_set_hl(0, "MiniCursorword", { link = "Visual" })
+			vim.api.nvim_set_hl(0, "MiniCursorwordCurrent", { link = "Visual" })
+			vim.api.nvim_set_hl(0, "MiniIndentscopeSymbol", { fg = "#9f9f9f" })
+		end,
 	},
 	{
 		"folke/noice.nvim",
@@ -37,135 +82,8 @@ return {
 					command_palette = true, -- position the cmdline and popupmenu together
 					long_message_to_split = true, -- long messages will be sent to a split
 					inc_rename = false, -- enables an input dialog for inc-rename.nvim
-          lsp_doc_border = true, -- adds a border to the lsp doc
+					lsp_doc_border = true, -- adds a border to the lsp doc
 				},
-			})
-
-			-- Keymaps
-			vim.keymap.set("n", "<leader>nh", function()
-				noice.cmd("telescope")
-			end)
-		end,
-	},
-	{
-		"b0o/incline.nvim",
-		event = "BufReadPre",
-		priority = 1200,
-		config = function()
-			local devicons = require("nvim-web-devicons")
-			require("incline").setup({
-				window = {
-					placement = {
-						vertical = "bottom",
-						horizontal = "center",
-					},
-					padding = 0,
-					margin = { vertical = 0, horizontal = 0 },
-				},
-				hide = {
-					cursorline = true,
-				},
-				render = function(props)
-					local function get_git_branch()
-						local labels = {}
-						local branch = vim.b[props.buf].gitsigns_head
-						if branch ~= nil then
-							table.insert(labels, { " ", guifg = "#61AfEf" })
-							table.insert(labels, { branch, group = "Keyword" })
-							table.insert(labels, { " | " })
-						end
-						return labels
-					end
-
-					local function get_git_diff()
-						local icons = { removed = "-", changed = "~", added = "+" }
-						local signs = vim.b[props.buf].gitsigns_status_dict
-						local labels = {}
-						if signs == nil then
-							return labels
-						end
-						for name, icon in pairs(icons) do
-							if tonumber(signs[name]) and signs[name] > 0 then
-								table.insert(labels, { icon .. signs[name] .. " ", group = "Diff" .. name })
-							end
-						end
-						if #labels > 0 then
-							table.insert(labels, { "| " })
-						end
-						return labels
-					end
-
-					local function get_diagnostic_label()
-						local icons = { error = " ", warn = " ", info = " ", hint = " " }
-						local label = {}
-
-						for severity, icon in pairs(icons) do
-							local n = #vim.diagnostic.get(
-								props.buf,
-								{ severity = vim.diagnostic.severity[string.upper(severity)] }
-							)
-							if n > 0 then
-								table.insert(label, { icon .. n .. " ", group = "DiagnosticSign" .. severity })
-							end
-						end
-						if #label > 0 then
-							table.insert(label, { "| " })
-						end
-						return label
-					end
-
-					local function get_harpoon_items()
-						local harpoon = require("harpoon")
-						local marks = harpoon:list().items
-						local current_file_path = vim.fn.expand("%:p:.")
-						local label = {}
-
-						for id, item in ipairs(marks) do
-							if item.value == current_file_path then
-								table.insert(label, { id .. " ", guifg = "#FFFFFF", gui = "bold" })
-							else
-								table.insert(label, { id .. " ", guifg = "#434852" })
-							end
-						end
-
-						if #label > 0 then
-							table.insert(label, 1, { "󰛢 ", guifg = "#61AfEf" })
-							table.insert(label, { "| " })
-						end
-						return label
-					end
-
-					local function get_file_name()
-						local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ":t")
-						if filename == "" then
-							filename = "[No Name]"
-						end
-						local ft_icon, ft_color = devicons.get_icon_color(filename)
-
-						local label = {}
-						table.insert(label, { (ft_icon or "") .. " ", guifg = ft_color, guibg = "none" })
-						table.insert(label, { vim.bo[props.buf].modified and " " or "", guifg = "#d19a66" })
-						table.insert(label, { filename, gui = vim.bo[props.buf].modified and "bold,italic" or "bold" })
-						if not props.focused then
-							label["group"] = "BufferInactive"
-						end
-
-						return label
-					end
-
-					return {
-						{ "", guifg = "#0e0e0e" },
-						{
-							{ get_git_branch() },
-							{ get_diagnostic_label() },
-							{ get_git_diff() },
-							{ get_harpoon_items() },
-							{ get_file_name() },
-							guibg = "#0e0e0e",
-						},
-						{ "", guifg = "#0e0e0e" },
-					}
-				end,
 			})
 		end,
 	},
@@ -173,103 +91,149 @@ return {
 		"folke/snacks.nvim",
 		priority = 1000,
 		lazy = false,
-		init = function()
-			local snacks = require("snacks")
-			snacks.setup({
-				bigfile = { enabled = true },
-				quickfile = { enabled = true },
-				statuscolumn = { enabled = true },
-				words = { enabled = false },
-				gitbrowse = { enabled = true },
-				lazygit = { enabled = true },
-				notifier = {
-					enabled = true,
-					timeout = 3000,
+		opts = {
+			bigfile = { enabled = true },
+			input = { enabled = true },
+			quickfile = { enabled = true },
+			picker = { enabled = true },
+			notifier = {
+				enabled = true,
+				timeout = 3000,
+			},
+			styles = {
+				input = {
+					backdrop = 60,
 				},
-				styles = {
-					notification = {
-						wo = {
-							winblend = 0,
-							wrap = false,
-						},
+				notification = {
+					wo = {
+						winblend = 0,
+						wrap = true,
 					},
 				},
-			})
-
+			},
+		},
+		keys = {
 			-- Keymaps
-			vim.keymap.set("n", "<leader>gg", function()
-				snacks.lazygit()
+			-- Files
+			{
+				"<leader><space>",
+				function()
+					Snacks.picker.smart()
+				end,
+				desc = "Smart find files",
+			},
+			{
+				"<leader>ff",
+				function()
+					Snacks.picker.files()
+				end,
+				desc = "Find files",
+			},
+			{
+				"<leader>fg",
+				function()
+					Snacks.picker.git_files()
+				end,
+				desc = "Git files",
+			},
+			{
+				"<leader>lg",
+				function()
+					Snacks.picker.grep()
+				end,
+				desc = "Live grep",
+			},
+			{
+				"<leader>sk",
+				function()
+					Snacks.picker.keymaps()
+				end,
+				desc = "Show keymaps",
+			},
+			-- LSP
+			{
+				"gd",
+				function()
+					Snacks.picker.lsp_definitions()
+				end,
+				desc = "Goto definition",
+			},
+			{
+				"gD",
+				function()
+					Snacks.picker.lsp_declarations()
+				end,
+				desc = "Goto declarations",
+			},
+			{
+				"grr",
+				function()
+					Snacks.picker.lsp_references()
+				end,
+				desc = "Goto references",
+			},
+			-- Generals
+			{
+				"<leader>gg",
+				function()
+					Snacks.lazygit()
+				end,
+				desc = "Open LazyGit",
+			},
+			{
+				"<leader>nd",
+				function()
+					Snacks.notifier.hide()
+				end,
+				desc = "Hide notifications",
+			},
+			{
+				"<leader>gb",
+				function()
+					Snacks.gitbrowse()
+				end,
+				desc = "Go to git repository",
+			},
+			{
+				"<leader>nh",
+				function()
+					Snacks.notifier.hide()
+				end,
+				desc = "Dismiss notifications",
+			},
+		},
+		init = function()
+			local ns = vim.api.nvim_create_namespace("bufwrite_msgs")
+			-- Temp fix to send message on save
+			vim.ui_attach(ns, { ext_popupmenu = true }, function(event, ...)
+				if event == "msg_show" then
+					local kind, content = ...
+					if kind == "bufwrite" then
+						print("**** File saved!")
+						-- print("Wrote to " .. content[1][2])
+					end
+				end
 			end)
-			vim.keymap.set("n", "<leader>nd", function()
-				snacks.notifier.hide()
-			end)
-			vim.keymap.set("n", "<leader>gb", function()
-				snacks.gitbrowse()
-			end)
-
 			-- Toggles
 			vim.api.nvim_create_autocmd("User", {
 				pattern = "VeryLazy",
 				callback = function()
 					-- Setup some globals for debugging (lazy-loaded)
 					_G.dd = function(...)
-						snacks.debug.inspect(...)
+						Snacks.debug.inspect(...)
 					end
 					_G.bt = function()
-						snacks.debug.backtrace()
+						Snacks.debug.backtrace()
 					end
-					vim.print = _G.dd -- Override print to use snacks for `:=` command
+					vim.print = _G.dd -- Override print to use Snacks for `:=` command
 
 					-- Create some toggle mappings
-					snacks.toggle.option("spell", { name = "Spelling" }):map("<leader>us")
-					snacks.toggle.option("wrap", { name = "Wrap" }):map("<leader>nw")
-					snacks.toggle.option("relativenumber", { name = "Relative Number" }):map("<leader>uL")
-					snacks.toggle.diagnostics():map("<leader>ud")
-					snacks.toggle.line_number():map("<leader>ul")
-					snacks.toggle.inlay_hints():map("<leader>uh")
-				end,
-			})
-
-			-- LSP Porgress
-			local progress = vim.defaulttable()
-			vim.api.nvim_create_autocmd("LspProgress", {
-				callback = function(ev)
-					local client = vim.lsp.get_client_by_id(ev.data.client_id)
-					local value = ev.data.params.value --[[@as {percentage?: number, title?: string, message?: string, kind: "begin" | "report" | "end"}]]
-					if not client or type(value) ~= "table" then
-						return
-					end
-					local p = progress[client.id]
-
-					for i = 1, #p + 1 do
-						if i == #p + 1 or p[i].token == ev.data.params.token then
-							p[i] = {
-								token = ev.data.params.token,
-								msg = ("[%3d%%] %s%s"):format(
-									value.kind == "end" and 100 or value.percentage or 100,
-									value.title or "",
-									value.message and (" **%s**"):format(value.message) or ""
-								),
-								done = value.kind == "end",
-							}
-							break
-						end
-					end
-
-					local msg = {} ---@type string[]
-					progress[client.id] = vim.tbl_filter(function(v)
-						return table.insert(msg, v.msg) or not v.done
-					end, p)
-
-					local spinner = { "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏" }
-					vim.notify(table.concat(msg, "\n"), "info", {
-						id = "lsp_progress",
-						title = client.name,
-						opts = function(notif)
-							notif.icon = #progress[client.id] == 0 and " "
-								or spinner[math.floor(vim.uv.hrtime() / (1e6 * 80)) % #spinner + 1]
-						end,
-					})
+					Snacks.toggle.option("spell", { name = "Spelling" }):map("<leader>us")
+					Snacks.toggle.option("wrap", { name = "Wrap" }):map("<leader>nw")
+					Snacks.toggle.option("relativenumber", { name = "Relative Number" }):map("<leader>uL")
+					Snacks.toggle.diagnostics():map("<leader>ud")
+					Snacks.toggle.line_number():map("<leader>ul")
+					Snacks.toggle.inlay_hints():map("<leader>uh")
 				end,
 			})
 		end,
