@@ -12,9 +12,8 @@ vim.diagnostic.config({
 vim.lsp.enable({
 	"lua_ls",
 	"ts_ls",
-  "emmet_ls",
-  "tailwind_ls",
-	-- "dart_ls",
+	"emmet_ls",
+	"tailwind_ls",
 })
 
 -- Commands
