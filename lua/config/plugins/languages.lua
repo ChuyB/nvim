@@ -57,9 +57,9 @@ return {
 
 			local formatting = null_ls.builtins.formatting
 			local lint = null_ls.builtins.diagnostics
-			local completion = null_ls.builtins.completion
+			-- local completion = null_ls.builtins.completion
 
-			local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
+			-- local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
 
 			null_ls.setup({
 				sources = {
