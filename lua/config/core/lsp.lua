@@ -22,6 +22,7 @@ vim.lsp.enable({
 	"ts_ls",
 	"emmet_ls",
 	"tailwind_ls",
+	"svelte_ls",
 })
 
 -- Commands
