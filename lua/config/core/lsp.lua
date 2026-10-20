@@ -11,7 +11,7 @@ vim.diagnostic.config({
 		},
 	},
 
-	-- Upadtes on InsertLeave
+	-- Updates on InsertLeave
 	update_in_insert = false,
 	float = { border = "rounded" },
 })
@@ -23,6 +23,7 @@ vim.lsp.enable({
 	"emmet_ls",
 	"tailwind_ls",
 	"svelte_ls",
+  "astro"
 })
 
 -- Commands

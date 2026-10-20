@@ -5,11 +5,11 @@ return {
 	},
 	{
 		"nvim-treesitter/nvim-treesitter",
-		build = function()
-			require("nvim-treesitter.install").update({ with_sync = true })()
-		end,
+    branch = "main",
+    lazy = false,
+		build = ":TSUpdate",
 		config = function()
-			local treesitter = require("nvim-treesitter.configs")
+			local treesitter = require("nvim-treesitter")
 			treesitter.setup({
         highlight = {
           enable = true,
