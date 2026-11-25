@@ -23,7 +23,8 @@ vim.lsp.enable({
 	"emmet_ls",
 	"tailwind_ls",
 	"svelte_ls",
-  "astro"
+  "astro",
+	"jedi_language_server",
 })
 
 -- Commands

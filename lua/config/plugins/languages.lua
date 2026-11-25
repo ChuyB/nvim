@@ -10,31 +10,19 @@ return {
 		build = ":TSUpdate",
 		config = function()
 			local treesitter = require("nvim-treesitter")
-			treesitter.setup({
-        highlight = {
-          enable = true,
-          additional_vim_regex_highlighting = false,
-        },
-				auto_install = true,
-				ensure_installed = {
-					"lua",
-					"luadoc",
-					"luap",
-					"luau",
-					"java",
-					"javascript",
-					"typescript",
-					"tsx",
-					"css",
-					"html",
-					"markdown",
-					"markdown_inline",
-					"python",
-					"vimdoc",
-					"vim",
-					"c",
-					"cmake",
-				},
+			treesitter.setup()
+			treesitter.install({
+				"lua", "luadoc", "luap", "luau", "java", "javascript", "typescript", "tsx",
+				"css", "html", "markdown", "markdown_inline", "python", "vimdoc", "vim",
+				"c", "cmake", "svelte",
+			})
+			vim.api.nvim_create_autocmd("FileType", {
+				callback = function(ev)
+					local lang = vim.treesitter.language.get_lang(ev.match) or ev.match
+					if pcall(vim.treesitter.start, ev.buf, lang) then
+						vim.bo[ev.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+					end
+				end,
 			})
 		end,
 	},
@@ -65,6 +53,7 @@ return {
 				sources = {
 					formatting.stylua,
 					formatting.prettierd,
+					formatting.black,
 					formatting.google_java_format,
 					formatting.clang_format,
 					formatting.gofumpt,
